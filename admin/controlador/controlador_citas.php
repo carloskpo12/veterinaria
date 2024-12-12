@@ -48,6 +48,7 @@ $sentencia->bindParam(':fyh_creacion', $fechaHora);
 
 if ($sentencia->execute()) {
     echo 'success';
+    header('Location: ../citas.php');
 } else {
     echo 'Error al registrar en la base de datos';
 }

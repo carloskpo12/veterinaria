@@ -28,13 +28,13 @@ include("includes/header.php");
                 </thead>
                 <tbody>
                     <?php
-                    $query = mysqli_query($conexion, "SELECT * FROM categorias ORDER BY id DESC");
+                    $query = mysqli_query($conexion, "SELECT * FROM categorias ORDER BY id_categorias DESC");
                     while ($data = mysqli_fetch_assoc($query)) { ?>
                         <tr>
-                            <td><?php echo $data['id']; ?></td>
+                            <td><?php echo $data['id_categorias']; ?></td>
                             <td><?php echo $data['categoria']; ?></td>
                             <td>
-                                <form method="post" action="eliminar.php?accion=cli&id=<?php echo $data['id']; ?>" class="d-inline eliminar">
+                                <form method="post" action="eliminar.php?accion=cli&id=<?php echo $data['id_categorias']; ?>" class="d-inline eliminar">
                                     <button class="btn btn-danger" type="submit">Eliminar</button>
                                 </form>
                             </td>
