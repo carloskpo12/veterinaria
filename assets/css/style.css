@@ -1,0 +1,317 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-size: 16px; 
+}
+
+header {
+    height: auto;
+    margin-bottom: 80px; 
+}
+
+.contenedorheader {
+    width: 100%;
+    height: 50vh; 
+}
+
+.fondo {
+    height: 100%;
+    background-image: url(../imagenes/fondoLogo.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; 
+    flex-wrap: wrap; 
+}
+
+.login-form {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    margin-left: auto; 
+    max-width: 100%;
+    width: auto; 
+}
+
+.login-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-form input {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    width: 100%; 
+}
+
+.login-form button {
+    padding: 8px;
+    background-color: #ffbc0e;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background-color: #e0a50c;
+}
+
+.logo {
+    position: relative;
+    margin-right: auto; 
+    display: flex;
+    align-items: center;
+}
+
+header .logo img {
+    height: auto; 
+    max-height: 200px; 
+    width: auto;
+}
+
+.menu {
+    background-color: rgba(0, 0, 0, 0.685);
+    width: 100%;
+}
+
+header .menu ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+header .menu ul li {
+    padding: 10px; 
+}
+
+header .menu ul li:hover {
+    transform: scale(1.1);
+}
+
+header .menu ul li a {
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+}
+
+header .menu ul li a:hover {
+    color: #ffbc0e;
+}
+
+/* Contenedores */
+
+.principal {
+    width: 100%;
+    margin-bottom: 200px; 
+}
+
+.titulo {
+    align-items: center;
+    display: flex;
+    width: 100%;
+    height: auto;
+    margin-bottom: 50px; 
+}
+
+.contenedor .huella {
+    margin-left: 50px; 
+    width: 50px; 
+    height: auto;
+}
+
+.contenedor {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.contenedor1 {
+    flex: 1 1 320px;
+    margin: 16px; 
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contenedor1 .imagenes {
+    width: 300px;
+    height: 300px; 
+    border-radius: 32px;
+}
+
+.contenedor1 .texto {
+    overflow: hidden; 
+    width: 100%; 
+}
+
+.contenedor1 h2 {
+    margin-left: 40px;
+    font-size: 30px; 
+    text-align: center; 
+    color: #7c8129;
+    font-weight: bold;
+}
+
+.contenedor1 p {
+    font-size: 30px;
+    text-align: justify; 
+    width: 100%; 
+}
+
+.contenedorformulario {
+    flex: 1 1 240px;
+    margin: 16px; 
+    margin-right: 50px; 
+    border-radius: 50px; 
+    background-color: #e9eaf5;
+    box-shadow: 15px 5px 10px 1px #7c8129; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+aside {
+    width: 90%;
+    margin-bottom: 20px; 
+}
+
+.formulario {
+    margin-top: 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.formulario h3 {
+    font-size: 30px; 
+    text-align: center;
+    color: #7c8129;
+    font-weight: bold;
+}
+
+.formulario form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.formulario form label {
+    margin-bottom: 5px; 
+}
+
+.formulario form input {
+    width: 80%;
+    height: 25px; 
+    margin-bottom: 15px; 
+}
+
+.formulario form button {
+    width: 25%;
+    height: 30px;
+    margin-bottom: 15px;
+}
+
+.pie {
+    position: relative; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    width: 100%;
+    padding: 32px; 
+    border-radius: 25px; 
+    border: 2px solid #919191;
+    box-shadow: 5px 5px 5px 5px #919191; 
+    font-size: 20px;
+    text-align: center; 
+}
+
+.textocentado {
+    font-weight: bold;
+    font-size: 320px; 
+}
+
+.textocentado p {
+    margin-bottom: 8px;
+}
+
+.logoend {
+    position: absolute; 
+    top: 64px; 
+    right: 16px;
+}
+
+.logoend img {
+    width: 150px; 
+    height: 102px; 
+}
+.modal.fade .modal-dialog {
+    transform: translateY(-100px);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.fade.show .modal-dialog {
+    transform: translateY(0);
+}
+
+/* Estilos básicos para las alertas */
+.alert {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    padding: 20px;
+    border-radius: 5px;
+    opacity: 0;
+    animation: slideIn 0.5s forwards, fadeOut 5s 4.5s forwards;
+    z-index: 9999;
+    font-size: 16px;
+}
+
+/* Animación para que las alertas se deslicen desde la parte superior */
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Animación para desvanecer la alerta después de 4.5 segundos */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* Estilos para alertas de error */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Estilos para alertas de éxito */
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
