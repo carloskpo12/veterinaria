@@ -63,10 +63,10 @@ include 'includes/header.php';
           <div class="col-md-6">
             <center><b>Turno de la tarde</b></center>
             <div class="d-grid gap-3">
-            <button class="btn btn-success custom-btn" data-hora="08:00 - 09:00" id="btn_h1" type="button">08:00 - 09:00</button>
-            <button class="btn btn-success custom-btn" data-hora="09:00 - 10:00" id="btn_h2" type="button">09:00 - 10:00</button>
-            <button class="btn btn-success custom-btn" data-hora="10:00 - 11:00" id="btn_h3" type="button">10:00 - 11:00</button>
-            <button class="btn btn-success custom-btn" data-hora="11:00 - 12:00" id="btn_h4" type="button">11:00 - 12:00</button>
+            <button class="btn btn-success custom-btn" data-hora="12:00 - 13:00" id="btn_h1" type="button">12:00 - 13:00</button>
+            <button class="btn btn-success custom-btn" data-hora="13:00 - 14:00" id="btn_h2" type="button">13:00 - 14:00</button>
+            <button class="btn btn-success custom-btn" data-hora="14:00 - 15:00" id="btn_h3" type="button">14:00 - 15:00</button>
+            <button class="btn btn-success custom-btn" data-hora="15:00 - 16:00" id="btn_h4" type="button">15:00 - 16:00</button>
 
             </div>
           </div>
@@ -82,7 +82,7 @@ include 'includes/header.php';
 
 <!-- Modal de formulario -->
 <div class="modal fade" id="modal_formulario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg"> <!-- Se usa modal-lg para una modal más ancha -->
+  <div class="modal-dialog modal-lg"> 
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">
@@ -168,7 +168,7 @@ $(document).ready(function() {
         validRange: {
             start: new Date().toISOString().split('T')[0],
         },
-        events: 'controlador/cargar_citas.php', // Ruta para cargar los eventos de citas
+        events: 'controlador/cargar_citas.php',
         eventClick: function(info) {
             // Mostrar el nombre del cliente
             var clienteNombre = info.event.extendedProps.cliente_nombre; // Obtener el nombre del cliente

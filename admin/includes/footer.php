@@ -6,6 +6,19 @@
 
 <!-- Footer -->
 <footer class="sticky-footer bg-white">
+<footer>
+        <section class="pie">
+            <section class="textocentado">    
+                <p>Contacto</p>
+                <p>Línea Gratuita: 1-800-000-0001</p>
+                <p>Correo: preguntas@caninosyfelinos.com</p>
+                <p>Todos los derechos reservados 2024 LilOSBer;</p>
+            </section>
+            <section class="logoend">
+                <img src="../../assets/imagenes/Logo.png" alt="logofooter">
+            </section>
+        </section>
+    </footer>
 </footer>
 <!-- End of Footer -->
 
