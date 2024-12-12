@@ -51,10 +51,11 @@ include 'includes/header.php';
           <div class="col-md-6">
             <center><b>Turno de la mañana</b></center>
             <div class="d-grid gap-3">
-              <button class="btn btn-success custom-btn" id="btn_h1" type="button">08:00 - 09:00</button>
-              <button class="btn btn-success custom-btn" id="btn_h2" type="button">09:00 - 10:00</button>
-              <button class="btn btn-success custom-btn" id="btn_h3" type="button">10:00 - 11:00</button>
-              <button class="btn btn-success custom-btn" id="btn_h4" type="button">11:00 - 12:00</button>
+            <button class="btn btn-success custom-btn" data-hora="08:00 - 09:00" id="btn_h1" type="button">08:00 - 09:00</button>
+            <button class="btn btn-success custom-btn" data-hora="09:00 - 10:00" id="btn_h2" type="button">09:00 - 10:00</button>
+            <button class="btn btn-success custom-btn" data-hora="10:00 - 11:00" id="btn_h3" type="button">10:00 - 11:00</button>
+            <button class="btn btn-success custom-btn" data-hora="11:00 - 12:00" id="btn_h4" type="button">11:00 - 12:00</button>
+
             </div>
           </div>
 
@@ -62,10 +63,11 @@ include 'includes/header.php';
           <div class="col-md-6">
             <center><b>Turno de la tarde</b></center>
             <div class="d-grid gap-3">
-              <button class="btn btn-warning custom-btn" id="btn_h5" type="button">12:00 - 13:00</button>
-              <button class="btn btn-warning custom-btn" id="btn_h6" type="button">13:00 - 14:00</button>
-              <button class="btn btn-warning custom-btn" id="btn_h7" type="button">14:00 - 15:00</button>
-              <button class="btn btn-warning custom-btn" id="btn_h8" type="button">15:00 - 16:00</button>
+            <button class="btn btn-success custom-btn" data-hora="08:00 - 09:00" id="btn_h1" type="button">08:00 - 09:00</button>
+            <button class="btn btn-success custom-btn" data-hora="09:00 - 10:00" id="btn_h2" type="button">09:00 - 10:00</button>
+            <button class="btn btn-success custom-btn" data-hora="10:00 - 11:00" id="btn_h3" type="button">10:00 - 11:00</button>
+            <button class="btn btn-success custom-btn" data-hora="11:00 - 12:00" id="btn_h4" type="button">11:00 - 12:00</button>
+
             </div>
           </div>
         </div>
@@ -119,12 +121,13 @@ include 'includes/header.php';
               <label for="hora_reserva" class="form-label">Hora de reserva</label>
               <input type="text" class="form-control" id="hora_reserva" disabled>
               <input type="text" name="hora_cita" class="form-control" id="hora_reserva2" hidden>
+
             </div>
           </div>
           <div class="row mb-3">
             <div class="col-md-12">
               <label for="notas" class="form-label">Notas adicionales</label>
-              <textarea class="form-control" name="descricion" id="notas" rows="3" placeholder="Información adicional sobre la cita"></textarea>
+              <textarea class="form-control" name="descripcion" id="notas" rows="3" placeholder="Información adicional sobre la cita"></textarea>
             </div>
           </div>
         
@@ -143,9 +146,8 @@ include 'includes/header.php';
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-var a; // Declaración de la variable 'a'
-
-document.addEventListener('DOMContentLoaded', function () {
+var a; 
+$(document).ready(function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'es',
@@ -164,39 +166,65 @@ document.addEventListener('DOMContentLoaded', function () {
             endTime: '16:00', // Horario laboral
         },
         validRange: {
-            start: new Date().toISOString().split('T')[0], // Desde hoy
+            start: new Date().toISOString().split('T')[0],
         },
         events: 'controlador/cargar_citas.php', // Ruta para cargar los eventos de citas
         eventClick: function(info) {
             // Mostrar el nombre del cliente
             var clienteNombre = info.event.extendedProps.cliente_nombre; // Obtener el nombre del cliente
-            alert('Cita: ' + info.event.title + '\nCliente: ' + clienteNombre); // Mostrar la alerta con el nombre del cliente
+            alert('Cita: ' + info.event.title + '\nCliente: ' + clienteNombre); 
         },
-        eventRender: function(info) {
-            console.log(info.event); // Mostrar los eventos cargados en la consola
-        },
-        dateClick: function (info) {
+        dateClick: function(info) {
             var selectedDate = info.dateStr;
-            a = selectedDate; // Asignar la fecha seleccionada a la variable 'a'
-            const date = new Date(selectedDate);
+            var date = new Date(selectedDate);
             var dayOfWeek = date.getDay();
             var days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-
+            a = selectedDate;
             if (dayOfWeek === 5 || dayOfWeek === 6) {
                 alert("No hay atención en este día");
             } else {
-                $('#modal_citas').modal('show');
+                $('#modal_cita').modal('show');
                 $('#dia_de_la_semana').text(days[dayOfWeek]);
-            }
+
+                var fecha = info.dateStr;
+                  var url = "controlador/verificar_horario.php";
+
+                  $.get(url, { fecha: fecha })
+                      .done(function(datos) {
+                          try {
+                              var respuesta = JSON.parse(datos);
+
+                              if (respuesta.error) {
+                                  alert(respuesta.error);
+                                  return;
+                              }
+
+                              // Limpiar estilos previos
+                              $('button[id^="btn_h"]').prop('disabled', false).css('background-color', '');
+
+                              // Deshabilitar horarios ocupados
+                              respuesta.ocupados.forEach(function(horario, index) {
+                                  var btnId = "#btn_h" + (index + 1); 
+                                  $(btnId).prop('disabled', true).css('background-color', 'red');
+                              });
+                          } catch (e) {
+                              alert('Error procesando la respuesta del servidor.');
+                          }
+                      })
+                      .fail(function() {
+                          alert('Hubo un error al verificar los horarios.');
+                      });
+                    }
         }
     });
 
-    calendar.render(); // Renderizar el calendario
+    // Inicializar el calendario
+    calendar.render();
 
     // Evento para cuando se hace clic en el botón de hora personalizada
     $(document).on('click', '.custom-btn', function () {
         var horaSeleccionada = $(this).data('hora'); 
-        $('#modal_citas').modal('hide');
+        $('#modal_cita').modal('hide');
         $('#modal_formulario').modal('show');
         
         // Asignar la fecha a los campos de fecha
@@ -208,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#hora_reserva2').val(horaSeleccionada);
     });
 });
-
 
 
 </script>

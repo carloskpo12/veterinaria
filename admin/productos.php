@@ -4,16 +4,16 @@ require_once "../config/conexion.php";
 if (isset($_POST)) {
     if (!empty($_POST)) {
         // Variables para los productos
-        $codigo = $_POST['codigo']; // Código del producto
-        $nombre = $_POST['nombre']; // Nombre del producto
-        $tipo = $_POST['Tipo']; // Tipo del producto
-        $marca = $_POST['marca']; // Marca del producto
-        $precio = $_POST['precio']; // Precio del producto
-        $descuento = $_POST['descuento']; // Descuento aplicado
-        $stock = $_POST['stock']; // Stock disponible
-        $descripcion = $_POST['descripcion']; // Descripción del producto
-        $categoria = $_POST['categoria']; // ID de la categoría
-        $img = $_FILES['foto']; // Foto del producto
+        $codigo = $_POST['codigo'];
+        $nombre = $_POST['nombre'];
+        $tipo = $_POST['Tipo'];
+        $marca = $_POST['marca']; 
+        $precio = $_POST['precio']; 
+        $descuento = $_POST['descuento'];
+        $stock = $_POST['stock'];
+        $descripcion = $_POST['descripcion']; 
+        $categoria = $_POST['categoria'];
+        $img = $_FILES['foto'];
 
         // Nombre y ruta para la imagen
         $name = $img['name'];

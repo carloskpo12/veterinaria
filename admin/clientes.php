@@ -18,12 +18,12 @@ if (isset($_GET['delete'])) {
 
         if (mysqli_stmt_execute($stmt)) {
             echo "Cliente eliminado con éxito.";
-            header('Location: clientes.php'); // Redirigir tras eliminar
+            header('Location: clientes.php');
             exit;
         } else {
             echo 'No se pudo eliminar al cliente.';
         }
-        mysqli_stmt_close($stmt); // Cerrar la sentencia
+        mysqli_stmt_close($stmt); 
     } else {
         echo 'ID de cliente no válido.';
     }
@@ -48,13 +48,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (mysqli_stmt_execute($stmt)) {
             echo 'Cliente registrado exitosamente.';
-            header('Location: clientes.php'); // Redirigir tras registrar
+            header('Location: clientes.php');
             exit;
         } else {
             echo 'Error al registrar el cliente: ' . mysqli_error($conexion);
         }
-        mysqli_stmt_close($stmt); // Cerrar la sentencia
-    } else {
+        mysqli_stmt_close($stmt);
         echo 'Todos los campos son obligatorios.';
     }
 }

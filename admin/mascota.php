@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_mascota'])) {
     // Ejecutar la consulta
     if (mysqli_stmt_execute($stmt)) {
         echo "Mascota actualizada correctamente.";
-        header('Location: mascota.php'); // Redirigir después de actualizar
+        header('Location: mascota.php');
         exit;
     } else {
         echo "Error al actualizar la mascota.";
@@ -65,7 +65,7 @@ $query_mascotas = "SELECT * FROM mascotas";
 $result = mysqli_query($conexion, $query_mascotas);
 
 if (!$result) {
-    die('Error en la consulta: ' . mysqli_error($conexion)); // Si hay un error, muéstralo
+    die('Error en la consulta: ' . mysqli_error($conexion));
 }
 ?>
 

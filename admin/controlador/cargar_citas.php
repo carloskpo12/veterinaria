@@ -4,7 +4,7 @@ include '../../config/conexion.php';
 // Consulta para obtener las citas con el nombre del cliente
 $sql = "SELECT citas.title, citas.start, citas.end, citas.color, clientes.nombre AS cliente_nombre
         FROM citas 
-        JOIN clientes ON citas.id_cliente = clientes.id_cliente";  // Relación entre la tabla de citas y clientes
+        JOIN clientes ON citas.id_cliente = clientes.id_cliente"; 
 
 $query = $pdo->prepare($sql);
 $query->execute();

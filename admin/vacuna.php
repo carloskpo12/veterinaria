@@ -2,9 +2,9 @@
 include '../config/conexion.php';
 
 // Parámetros de paginación
-$limit = 20;  // Número de registros por página
-$page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
-$offset = ($page - 1) * $limit; // Desplazamiento para la consulta SQL
+$limit = 20; 
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$offset = ($page - 1) * $limit; 
 
 // Búsqueda de datos
 $search = '';
@@ -67,7 +67,7 @@ $total_query = "
 $total_result = mysqli_query($conexion, $total_query);
 $total_row = mysqli_fetch_assoc($total_result);
 $total_records = $total_row['total'];
-$total_pages = ceil($total_records / $limit); // Calcular el total de páginas
+$total_pages = ceil($total_records / $limit); 
 
 // Verificar si el formulario de aplicación de vacuna fue enviado
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_mascota'])) {
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id_mascota'])) {
     // Ejecutar la consulta
     if (mysqli_stmt_execute($stmt)) {
         echo "Vacuna aplicada correctamente.";
-        header('Location: vacuna.php'); // Redirigir después de registrar la vacuna
+        header('Location: vacuna.php'); 
         exit;
     } else {
         echo "Error al aplicar la vacuna.";

@@ -11,7 +11,7 @@ $consulta_cliente->execute();
 $resultado = $consulta_cliente->fetch(PDO::FETCH_ASSOC);
 
 if ($resultado) {
-    $id_cliente = $resultado['id_cliente']; // Extraemos el `id_cliente`
+    $id_cliente = $resultado['id_cliente']; 
 } else {
     echo 'Cliente no encontrado en la base de datos';
     exit;
@@ -19,14 +19,14 @@ if ($resultado) {
 
 $nombre_mascota = $_POST['nombre_mascota'];
 $tipo_de_servicio = $_POST['tipo_de_servicio'];
-$fecha_cita = $_POST['fecha_cita'];  // Fecha en formato Y-m-d
-$hora_cita = $_POST['hora_cita'];  // Hora en formato H:i:s
+$fecha_cita = $_POST['fecha_cita'];  
+$hora_cita = $_POST['hora_cita']; 
 $descripcion = $_POST['descripcion'];
 $title = $tipo_de_servicio;
-$start = $fecha_cita . ' ' . $hora_cita; // Concatenar la fecha y hora
-$end = $start;  // Si la cita tiene la misma hora de inicio y fin
-$color = "#2324ff";  // Color predeterminado
-$fechaHora = date('Y-m-d H:i:s');  // Fecha y hora de creación
+$start = $fecha_cita . ' ' . $hora_cita; 
+$end = $start; 
+$color = "#2324ff";  
+$fechaHora = date('Y-m-d H:i:s');  
 
 // Preparar la consulta para insertar la cita
 $sentencia = $pdo->prepare('INSERT INTO citas 

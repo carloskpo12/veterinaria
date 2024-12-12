@@ -1,13 +1,7 @@
 <?php
-session_start();
-
-if (!empty($_SESSION['active'])) {
-    header('Location: admin/clientes.php');
-    exit();
-} else {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $alert = '';
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['form_type']) && $_POST['form_type'] === 'login') {
+        // Lógica de autenticación
         if (empty($_POST['usuario']) || empty($_POST['clave'])) {
             $alert = '<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
                         Ingrese usuario y contraseña
@@ -23,9 +17,7 @@ if (!empty($_SESSION['active'])) {
 
             $query = mysqli_query($conexion, "SELECT * FROM usuarios WHERE usuario = '$user' AND clave = '$clave'");
             
-            $resultado = mysqli_num_rows($query);
-
-            if ($resultado > 0) {
+            if (mysqli_num_rows($query) > 0) {
                 $dato = mysqli_fetch_array($query);
                 $_SESSION['active'] = true;
                 $_SESSION['id'] = $dato['id'];
@@ -35,67 +27,50 @@ if (!empty($_SESSION['active'])) {
                 exit();
             } else {
                 $alert = '<div class="alert alert-danger text-center alert-dismissible fade show" role="alert">
-                            Contraseña incorrecta
+                            Usuario o contraseña incorrectos
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>';
-                session_destroy(); 
             }
+        }
+    } elseif (isset($_POST['form_type']) && $_POST['form_type'] === 'cita') {
+        // Lógica de registro de citas
+        if (isset($_POST['nombre_mascota'], $_POST['id_cliente'], $_POST['fecha_reserva'], $_POST['hora_cita'], $_POST['tipo_de_servicio'])) {
+            require_once "config/conexion.php";
+
+            $sentencia->bindParam(':id_cliente', $id_cliente);
+            $sentencia->bindParam(':nombre_mascota', $nombre_mascota);
+            $sentencia->bindParam(':tipo_de_servicio', $tipo_de_servicio);
+            $sentencia->bindParam(':fecha_cita', $fecha_cita);
+            $sentencia->bindParam(':hora_cita', $hora_cita);
+            $sentencia->bindParam(':descripcion', $descripcion);
+            $sentencia->bindParam(':title', $title);
+            $sentencia->bindParam(':start', $start);
+            $sentencia->bindParam(':end', $end);
+            $sentencia->bindParam(':color', $color);
+            $sentencia->bindParam(':fyh_creacion', $fechaHora);
+
+            $fecha_hora = $fecha_reserva . ' ' . $hora_cita;
+
+            // Preparar la consulta para insertar la cita
+                $sentencia = $pdo->prepare('INSERT INTO citas 
+                (id_cliente, nombre_mascota, tipo_de_servicio, fecha_cita, hora_cita, descripcion, title, start, end, color, fyh_creacion)
+                VALUES 
+                (:id_cliente, :nombre_mascota, :tipo_de_servicio, :fecha_cita, :hora_cita, :descripcion, :title, :start, :end, :color, :fyh_creacion)');
+
+
+            if ($conexion->query($sql) === TRUE) {
+                echo "Cita registrada exitosamente.";
+            } else {
+                echo "Error al registrar la cita: " . $conexion->error;
+            }
+
+            $conexion->close();
         }
     }
 }
 
-// Verificar si el formulario de citas fue enviado
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mascota'], $_POST['cedula'], $_POST['fecha'], $_POST['hora'], $_POST['edad'], $_POST['raza'])) {
-
-    // Obtener los datos del formulario
-    $codigo_mascota = $_POST['mascota'];
-    $cedula_cliente = $_POST['cedula'];
-    $fecha = $_POST['fecha'];
-    $hora = $_POST['hora'];
-    $edad = $_POST['edad'];
-    $raza = $_POST['raza'];
-
-    // Combinar fecha y hora en un solo campo
-    $fecha_hora = $fecha . " " . $hora;
-
-    // Conectar a la base de datos
-    require_once "config/conexion.php";
-
-    // Verificar si la mascota existe en la base de datos
-    $sql_mascota = "SELECT id_mascota FROM mascotas WHERE codigo = '$codigo_mascota'";
-    $result_mascota = $conexion->query($sql_mascota);
-
-    if ($result_mascota->num_rows == 0) {
-        die("La mascota con el código $codigo_mascota no existe.");
-    }
-
-    $mascota_id = $result_mascota->fetch_assoc()['id_mascota'];
-
-    // Verificar si el cliente existe en la base de datos
-    $sql_cliente = "SELECT id_cliente FROM clientes WHERE cedula = '$cedula_cliente'";
-    $result_cliente = $conexion->query($sql_cliente);
-
-    if ($result_cliente->num_rows == 0) {
-        die("El cliente con la cédula $cedula_cliente no está registrado.");
-    }
-
-    $cliente_id = $result_cliente->fetch_assoc()['id_cliente'];
-
-    // Insertar la cita en la tabla `citas`
-    $sql = "INSERT INTO citas (fecha_hora, descripcion, estado_cita, id_mascota, id_cliente)
-            VALUES ('$fecha_hora', 'Cita para revisión', 'Pendiente', '$mascota_id', '$cliente_id')";
-
-    if ($conexion->query($sql) === TRUE) {
-        echo "Cita registrada exitosamente.";
-    } else {
-        echo "Error al registrar la cita: " . $conexion->error;
-    }
-
-    // Cerrar la conexión
-    $conexion->close();
-} 
 ?>
 
 
@@ -107,72 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mascota'], $_POST['ce
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitar Cita</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <script>
-// Validación del formulario de citas
-function validarFormularioCita() {
-    const mascota = document.getElementById("mascota").value;
-    const edad = document.getElementById("edad").value;
-    const raza = document.getElementById("raza").value;
-    const fecha = document.getElementById("fecha").value;
-    const hora = document.getElementById("hora").value;
-    const cedula = document.getElementById("cedula").value;
-
-    if (!mascota || !edad || !raza || !fecha || !hora || !cedula) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Formulario incompleto',
-            text: 'Por favor complete todos los campos antes de enviar el formulario.',
-        });
-        return false;
-    }
-
-    // Validación de fecha y hora
-    const fechaActual = new Date(); // Fecha actual
-    const fechaIngresada = new Date(`${fecha}T${hora}`); // Combina la fecha y la hora seleccionada
-    const fechaSoloIngresada = new Date(fecha); // Solo la fecha, sin la hora
-
-    // Si la fecha ingresada es menor a la fecha actual
-    if (fechaSoloIngresada < fechaActual.setHours(0, 0, 0, 0)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Fecha inválida',
-            text: 'No puedes seleccionar una fecha pasada.',
-        });
-        return false;
-    }
-
-    // Si la fecha ingresada es hoy pero la hora seleccionada es en el pasado
-    if (fechaSoloIngresada.getTime() === fechaActual.setHours(0, 0, 0, 0) && fechaIngresada < fechaActual) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Hora inválida',
-            text: 'No puedes seleccionar una hora en el pasado.',
-        });
-        return false;
-    }
-
-    return true;
-}
-
-
-
-// Ocultar alertas automáticamente después de 5 segundos
-function ocultarAlerta() {
-    const alertas = document.querySelectorAll('.alert');
-    alertas.forEach(alerta => {
-        setTimeout(() => {
-            alerta.style.display = 'none';
-        }, 5000);
-    });
-}
-
-window.onload = function () {
-    ocultarAlerta();  // Ocultar alertas automáticamente al cargar la página
-};
-
-</script>
-
-
 </head>
 <body>
   <header>
@@ -195,15 +104,14 @@ window.onload = function () {
             <section class="login-form" id="formulario-login">
                 <?php echo (isset($alert)) ? $alert : ''; ?>
                 <form class="user" method="POST" action="" autocomplete="off">
+                    <input type="hidden" name="form_type" value="login">
                     <div class="form-group">
                         <input type="text" class="form-control form-control-user" id="usuario" name="usuario" placeholder="Usuario...">
                     </div>
                     <div class="form-group">
                         <input type="password" class="form-control form-control-user" id="clave" name="clave" placeholder="Password">
                     </div>
-                    <button type="submit" name="login" class="btn btn-primary btn-user btn-block">
-                        Login
-                    </button>
+                    <button type="submit" name="login" class="btn btn-primary btn-user btn-block">Login</button>
                     <hr>
                 </form>
             </section>
@@ -212,6 +120,7 @@ window.onload = function () {
 </header>
 
     <section class="principal">
+
         <section class="contenedor">
             <article class="contenedor1">
                 <section class="titulo">
@@ -248,36 +157,49 @@ window.onload = function () {
             <section class="principal">
         <section class="contenedor">
         <section class="contenedorformulario">
-                <aside>
-                    <section class="formulario" id="formulario-cita">
-                        <h3>Solicita Cita Médica</h3>
-                            <form action="index.php" method="POST" onsubmit="return validarFormularioCita()">
-                        <label for="mascota">Código de Mascota:</label>
-                        <input type="text" id="mascota" name="mascota" required>
+        <section class="formulario" id="formulario-cita">
+    <h3>Solicita Cita Médica</h3>
+    <form action="index.php" method="POST">
+        <input type="hidden" name="form_type" value="cita">
+        <label for="nombre_mascota" class="form-label">Nombre de la mascota</label>
+        <input type="text" name="nombre_mascota" class="form-control" id="nombre_mascota" placeholder="Ejemplo: Max" required>
+        
+        <label for="cedula" class="form-label">Cédula</label>
+        <input type="text" name="id_cliente" class="form-control" id="cedula" placeholder="Ejemplo: 123456789" required>
+        
+        <label for="tipo_servicio" class="form-label">Tipo de servicio</label>
+        <select class="form-select" name="tipo_de_servicio" id="tipo_servicio" required>
+            <option value="" selected disabled>Selecciona un servicio</option>
+            <option value="consulta">Consulta médica</option>
+            <option value="vacunacion">Vacunación</option>
+            <option value="baño">Baño</option>
+        </select>
+        
+        <label for="fecha_reserva" class="form-label">Fecha de reserva</label>
+        <input type="date" class="form-control" id="fecha_reserva" name="fecha_reserva" required>
+        
+        <label for="hora_reserva" class="form-label">Hora de cita</label>
+        <select class="form-select" name="hora_cita" id="hora_reserva" required>
+            <option value="" selected disabled>Selecciona la hora de la reserva</option>
+            <option value="08:00 - 09:00">08:00 - 09:00</option>
+            <option value="09:00 - 10:00">09:00 - 10:00</option>
+            <option value="10:00 - 11:00">10:00 - 11:00</option>
+            <option value="11:00 - 12:00">11:00 - 12:00</option>
+            <option value="12:00 - 13:00">12:00 - 13:00</option>
+            <option value="13:00 - 14:00">13:00 - 14:00</option>
+            <option value="14:00 - 15:00">14:00 - 15:00</option>
+            <option value="15:00 - 16:00">15:00 - 16:00</option>
+            <option value="16:00 - 17:00">16:00 - 17:00</option>
+            <option value="17:00 - 18:00">17:00 - 18:00</option>
+        </select>
+        
+        <label for="notas" class="form-label">Notas adicionales</label>
+        <textarea class="form-control" name="descripcion" id="notas" rows="3" placeholder="Información adicional sobre la cita"></textarea>
+        
+        <button type="submit" class="btn btn-primary">Registrar cita</button>
+    </form>
+</section>
 
-                        <label for="edad">Edad de la Mascota:</label>
-                        <input type="text" id="edad" name="edad" required>
-
-                        <label for="raza">Raza de la Mascota:</label>
-                        <input type="text" id="raza" name="raza" required>
-
-                        <label for="fecha">Fecha:</label>
-                        <input type="date" id="fecha" name="fecha" required>
-
-                        <label for="hora">Hora:</label>
-                        <input type="time" id="hora" name="hora" required>
-
-                        <label for="cedula">Cédula del Amo (Cliente):</label>
-                        <input type="text" id="cedula" name="cedula" required>
-
-                        <button type="submit">Registrar Cita</button>
-                    </form>
-                        </section>
-
-
-                    </section>
-                </aside>
-            </section>
             </section>
         </section>
     </section>
@@ -297,5 +219,58 @@ window.onload = function () {
     </footer>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+document.getElementById('fecha_reserva').addEventListener('change', function () {
+    var fecha = this.value;
+    var url = "admin/controlador/verificar_horario.php";
+
+    // Realizar la solicitud AJAX
+    $.get(url, { fecha: fecha })
+        .done(function (datos) {
+            try {
+                var respuesta = JSON.parse(datos);
+
+                if (respuesta.error) {
+                    alert(respuesta.error);
+                    return;
+                }
+
+                var selectHoras = document.getElementById('hora_reserva');
+                selectHoras.innerHTML = ''; // Limpiar el contenido previo
+
+                var horarios = [
+                    '08:00 - 09:00',
+                    '09:00 - 10:00',
+                    '10:00 - 11:00',
+                    '11:00 - 12:00',
+                    '12:00 - 13:00',
+                    '13:00 - 14:00',
+                    '14:00 - 15:00',
+                    '15:00 - 16:00',
+                    '16:00 - 17:00',
+                    '17:00 - 18:00'
+                ];
+
+                horarios.forEach(function (horario) {
+                    var option = document.createElement('option');
+                    option.value = horario;
+                    option.textContent = horario;
+
+                    if (respuesta.ocupados.includes(horario)) {
+                        option.disabled = true; // Deshabilitar horas ocupadas
+                    }
+
+                    selectHoras.appendChild(option);
+                });
+            } catch (e) {
+                alert('Error procesando la respuesta del servidor.');
+            }
+        })
+        .fail(function () {
+            alert('Hubo un error al verificar los horarios.');
+        });
+});
+
+</script>
 </body>
 </html>
